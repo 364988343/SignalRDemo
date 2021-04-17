@@ -1,0 +1,158 @@
+﻿@page
+@model  SignalDemo.Pages.echarts.IndexModel
+@{
+    ViewBag.Title = "Echarts图标展示（https://www.cnblogs.com/wdw984）";
+    Layout = "_LayoutEcharts";
+}
+
+<div id="main" style="width: 800px;height:600px;"></div>
+<button onclick="Test()">测试</button>
+<script type="text/javascript">
+    var app = {};
+
+    var chartDom = document.getElementById('main');
+    var myChart = echarts.init(chartDom);
+    var option;
+
+    var posList = [
+        'left', 'right', 'top', 'bottom',
+        'inside',
+        'insideTop', 'insideLeft', 'insideRight', 'insideBottom',
+        'insideTopLeft', 'insideTopRight', 'insideBottomLeft', 'insideBottomRight'
+    ];
+
+    app.configParameters = {
+        rotate: {
+            min: -90,
+            max: 90
+        },
+        align: {
+            options: {
+                left: 'left',
+                center: 'center',
+                right: 'right'
+            }
+        },
+        verticalAlign: {
+            options: {
+                top: 'top',
+                middle: 'middle',
+                bottom: 'bottom'
+            }
+        },
+        position: {
+            options: posList.reduce(function (map, pos) {
+                map[pos] = pos;
+                return map;
+            }, {})
+        },
+        distance: {
+            min: 0,
+            max: 100
+        }
+    };
+    app.config = {
+        rotate: -25,
+        align: 'left',
+        verticalAlign: 'middle',
+        position: 'bottom',
+        distance: 15,
+        onChange: function () {
+            var labelOption = {
+                normal: {
+                    rotate: app.config.rotate,
+                    align: app.config.align,
+                    verticalAlign: app.config.verticalAlign,
+                    position: app.config.position,
+                    distance: app.config.distance
+                }
+            };
+            myChart.setOption({
+                series: [{
+                    label: labelOption
+                }, {
+                    label: labelOption
+                }, {
+                    label: labelOption
+                }, {
+                    label: labelOption
+                }]
+            });
+        }
+    };
+    var labelOption = {
+        show: true,
+        position: app.config.position,
+        distance: app.config.distance,
+        align: app.config.align,
+        verticalAlign: app.config.verticalAlign,
+        rotate: app.config.rotate,
+        formatter: '{c}  {name|{a}}',
+        fontSize: 16,
+        rich: {
+            name: {
+            }
+        }
+    };
+
+    option = {
+        title: {
+            text: '验证情况统计'
+        },
+        tooltip: {},
+        legend: {
+
+        },
+        xAxis: {
+            data: ['数据一', '数据二', '数据三', '',
+                '数据四', '数据五', '',
+                '数据六', '数据七', '数据八', '数据九', '',
+                '数据十', '数据十一', '数据十二', '数据十三', '数据十四'],
+            axisTick: { show: false },
+            axisLabel: { rotate: -25, interval: 0 }
+        },
+        yAxis: {},
+        series: [{
+            type: 'bar',
+            label: {
+                show: true,
+                position: 'outside'
+            },
+            itemStyle: {
+                normal: {
+                    color: function (params) {
+                        var colorList = [
+                            "Blue",
+                            "Blue",
+                            "Blue",
+                            "",
+                            "LightSkyBlue",
+                            "LightSkyBlue",
+                            "",
+                            "Gold",
+                            "Gold",
+                            "Gold",
+                            "Gold",
+                            "",
+                            "LightGrey",
+                            "LightGrey",
+                            "LightGrey",
+                            "LightGrey",
+                            "LightGrey"
+                        ];
+                        return colorList[params.dataIndex];
+                    }
+                }
+            },
+            data: ['0', '0', '0', '', '0', '0', '', '0', '0', '0', '0', '', '0', '0', '0', '0', '0']
+        }]
+    };
+
+    option && myChart.setOption(option);
+
+</script>
+@section Scripts
+{
+    <script src="~/js/signalr/dist/browser/signalr.js"></script>
+    <script src="~/js/echartchat.js"></script>
+}

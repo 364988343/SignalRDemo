@@ -1,0 +1,49 @@
+﻿<!DOCTYPE html>
+
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width" />
+    <script src="~/lib/echarts/dist/echarts.min.js"></script>
+    <script src="~/lib/jquery/dist/jquery.js"></script>
+    <title>@ViewBag.Title</title>
+    <script>
+        function Test() {
+            var chartDom = document.getElementById('main');
+            var myChart = window.echarts.init(chartDom);
+            $.ajax({
+                url:'/echarts',
+                type:'POST',
+                dateType: 'json',
+                data: { user: user},
+                beforeSend: function (XHR) {
+                    console.log('I am ' + user);
+                    myChart.showLoading({
+                        text: '加载中。。。',
+                        effect: 'whirling'                    });
+                },
+                success:function(data) {
+                    var option = {
+                        series: [{
+                            data: data.data
+                        }]
+                    };
+                    myChart.setOption(option);
+                },
+                error: function (XMLHttpRequest, textStatus, errorThrown) {
+                    alert(errorThrown);
+                },
+                complete:function(XHR, TS) {
+                    myChart.hideLoading();
+                }
+            });
+        }
+    </script>
+</head>
+<body>
+    <div>
+        @RenderBody()
+    </div>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>
